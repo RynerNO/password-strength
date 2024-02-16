@@ -22,7 +22,7 @@ export class PasswordStrengthService {
           colors: ['gray', 'gray', 'gray']
         }
       }
-      // Determine password strength and set colors accordingly
+      // Determine password strength
       const points = {
         hasLetters: /[a-zA-Z]/.test(password) ? 1 : 0,
         hasDigits: /\d/.test(password) ? 1 : 0,

@@ -1,25 +1,31 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PasswordStrengthService } from '../../services/password-strength.service';
-
+import { PasswordStrengthInputComponent } from './input/password-srength-input.component';
+import { PasswordStrengthSegmentsComponent } from './strength-segments/password-strength-segments.component';
 @Component({
   selector: 'app-password-strength',
   standalone: true,
-  imports: [FormsModule],
+  imports: [PasswordStrengthInputComponent, PasswordStrengthSegmentsComponent, ReactiveFormsModule],
   templateUrl: './password-strength.component.html',
-  styleUrl: './password-strength.component.scss'
 })
 export class PasswordStrengthComponent {
-  password: string = '';
-  strength: string = '';
-  colors: string[] = ['gray', 'gray', 'gray'];
-  constructor(private passwordStrengthService: PasswordStrengthService) {}
+  form: FormGroup;
+  passwordStrengthState = {
+    text: '',
+    colors: ['gray', 'gray', 'gray']
+  }
+  constructor(private fb: FormBuilder, private passwordStrengthService: PasswordStrengthService) {
+    this.form = this.fb.group({
+      password: ['']
+    })
+
+    this.form.get('password')?.valueChanges.subscribe((password) => {
+      this.passwordStrengthState = this.passwordStrengthService.getPasswordStrength(password);
+    })
+  }
   // Constants
   
  
-  checkStrength() {
-    const strength = this.passwordStrengthService.getPasswordStrength(this.password)
-    this.strength = strength.text
-    this.colors = strength.colors
-  }
+ 
 }
